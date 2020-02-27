@@ -38,7 +38,11 @@ class App extends React.Component {
                   loadsubsbuttonFlag:false,
                   loadPendButtonFlag:false,
                   apiResponse:'',
-                  inputSearchValue:''};
+                  inputSearchValue:'',
+                  numLicUser: 0,
+                  numSubUser: 0,
+                  numPendUser: 0
+                  };
     this.loadLicencedUser = this.loadLicencedUser.bind(this);
     this.loadSubscriptionUser = this.loadSubscriptionUser.bind(this);
     this.loadPendingUser = this.loadPendingUser.bind(this);
@@ -57,6 +61,23 @@ class App extends React.Component {
      this.setState({tableData:JSON.parse(val).data});
 
      this.setState({tableDataAll:JSON.parse(val).data});
+     let data = JSON.parse(val).data,
+         numLic = 0, numSub =0,numpend =0;
+     for(var i=0;i<data.length;i++){
+     var datarole =(data[i]).role;
+       if(datarole.includes('Liscenced')){
+         numLic++;
+       }
+       if(datarole.includes('Subscription')){
+         numSub++;
+       }
+       if(datarole.includes('Pending')){
+         numpend++;
+       }
+     }
+     this.setState({numLicUser:numLic});
+     this.setState({numSubUser:numSub});
+     this.setState({numPendUser:numpend});
    }
   componentDidMount() {
    this.callAPI();
@@ -191,16 +212,16 @@ class App extends React.Component {
                     <li className="bx--tabs__nav-item bx--tabs__nav-item--selected "
                     data-target=".tab-1-default" role="tab" aria-selected="true" ref="tab1">
                       <a tabIndex="0" id="tab-link-1-default" className="bx--tabs__nav-link"
-                      href="#" role="tab" aria-controls="tab-panel-1-default" onClick={this.loadLicencedUser}>Liscenced User</a>
+                      href="#" role="tab" style={{ width: 230}} aria-controls="tab-panel-1-default" onClick={this.loadLicencedUser}>Liscenced User({this.state.numLicUser})</a>
                     </li>
                     <li className="bx--tabs__nav-item " data-target=".tab-2-default" role="tab" ref="tab2" >
                       <a tabIndex="0" id="tab-link-2-default" className="bx--tabs__nav-link" href="#" role="tab"
-                      aria-controls="tab-panel-2-default" onClick={this.loadSubscriptionUser}>Subscription Administrator</a>
+                      aria-controls="tab-panel-2-default" style={{ width: 230}} onClick={this.loadSubscriptionUser}>Subscription Administrator({this.state.numSubUser})</a>
                     </li>
                     <li className="bx--tabs__nav-item " data-target=".tab-3-default" role="tab" ref="tab3" >
                       <a tabIndex="0" id="tab-link-3-default" className="bx--tabs__nav-link"
-                      href="#" role="tab" aria-controls="tab-panel-3-default"
-                      onClick={this.loadPendingUser}>Pending Interaction</a>
+                      href="#" role="tab" style={{ width: 230}} aria-controls="tab-panel-3-default"
+                      onClick={this.loadPendingUser}>Pending Interaction({this.state.numPendUser})</a>
                     </li>
                   </ul>
                 </div>
